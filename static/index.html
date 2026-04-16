@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A-Share Event Radar | 买方投研终端</title>
+    <!-- 引入 Google Fonts 高级西文字体与中文字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边控制栏 -->
+        <aside class="glass-sidebar">
+            <div class="logo-box">
+                <span class="logo-icon">▲</span>
+                <span class="logo-text">A-Share Radar</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-target="view-radar">◎ 雷达探测</button>
+                <button class="nav-btn" data-target="view-about">📖 系统白皮书</button>
+                <button class="nav-btn" data-target="view-settings">⚙️ 安全配置</button>
+            </nav>
+            
+            <form id="radar-form">
+                <div class="input-group">
+                    <label for="symbol">股票代码</label>
+                    <input type="text" id="symbol" name="symbol" value="600519" maxlength="6" pattern="\d{6}" required placeholder="输入 6 位代码">
+                </div>
+                
+                <div class="input-group">
+                    <label for="daysBack">回溯天数</label>
+                    <div class="slider-box">
+                        <input type="range" id="daysBack" name="daysBack" min="3" max="90" value="30" oninput="document.getElementById('daysValue').textContent = this.value">
+                        <span class="days-display"><span id="daysValue">30</span> 天</span>
+                    </div>
+                </div>
+
+                <button type="submit" id="generateBtn" class="btn-primary">
+                    <span class="btn-text">🚀 发起雷达深描</span>
+                </button>
+            </form>
+
+            <div class="disclaimer">
+                数据直连交易所底表公告。<br>系统架构：Map-Reduce 双模抽提。
+            </div>
+        </aside>
+
+        <!-- 主内容展示区 -->
+        <main class="main-content">
+            <!-- 视图 1: 扫描雷达 -->
+            <div id="view-radar" class="view-section active">
+                <div id="loadingState" class="state-container hidden">
+                    <div class="pulse-ring"></div>
+                    <h2>正在渗透官方公告底稿</h2>
+                    <div class="loading-steps">
+                        <div class="step active">● Map单源截取中...</div>
+                        <div class="step">○ Shuffle噪音剥离中...</div>
+                        <div class="step">○ M2.7 模型终评研判中...</div>
+                    </div>
+                </div>
+
+                <div id="reportContainer" class="glass-panel report-content hidden">
+                    <!-- 渲染输出区 -->
+                </div>
+                
+                <div id="emptyState" class="state-container">
+                    <div class="watermark">AI Quant</div>
+                    <p>配置左侧参数，唤醒属于你的首研体系。</p>
+                </div>
+            </div>
+
+            <!-- 视图 2: 系统白皮书 -->
+            <div id="view-about" class="view-section hidden glass-panel prose-panel">
+                <h1>📖 A股权威买方“事件雷达”</h1>
+                <h2>核心痛点与大模型局限性</h2>
+                <p>在实际投资中，研究员每天面对大量的“混杂财务报表”、“日常股东会公告”。直接将几十篇长达万字的公告送给长窗口大模型，极易引发严重的大模型 **“注意力失焦 (Attention Dilution)”**，导致模型被废话带偏，忽略关键扭亏数字和重要动作。</p>
+                
+                <h2>本项目如何降噪破局：Map-Reduce 双模抽提</h2>
+                <ul>
+                    <li><strong>第一层 [MAP] 粗挖提取：</strong>强制化利用大模型对单篇极长的财报进行“金矿提取”，压缩为只包含“资金数据”的小型 JSON 卡片。</li>
+                    <li><strong>第二层 [SHUFFLE] Python 高效拦截：</strong>依托爬虫底表规则，我们可以在代码中精准销毁大量不具备实质增量贡献的“会议程序”、“减资进展”，并将具有同一**“事件暗号 (Event Key)”**的卡片拼凑聚合。</li>
+                    <li><strong>第三层 [REDUCE] 高管总览研判：</strong>输入极度纯净、已被剔去几十万字杂质的【核心事件簇信息流】，强迫模型只做 S/A 级的宏观定调！绝少幻觉，高度可靠！</li>
+                </ul>
+            </div>
+
+            <!-- 视图 3: 凭据配置 -->
+            <div id="view-settings" class="view-section hidden glass-panel form-panel">
+                <h1>⚙️ 引擎配置与凭据 (Settings)</h1>
+                <p class="subtitle">您的私钥通过 <code>localStorage</code> 严格封存在本地浏览器中，绝不会被明文保存或上传至任何日志服务器中。</p>
+                
+                <form id="config-form">
+                    <div class="input-group">
+                        <label for="apiKey">大语言模型 API Key (兼容 Anthropic 协议)</label>
+                        <input type="password" id="apiKey" class="wide-input" placeholder="eyJhbGci... 留空则使用本地环境变量">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="modelSelect">底层脑区引擎 (Model)</label>
+                        <select id="modelSelect" class="wide-select">
+                            <option value="MiniMax-M2.7">MiniMax M2.7 (推荐，SOTA 逻辑与代码能力)</option>
+                            <option value="MiniMax-M2.5">MiniMax M2.5 (高性价比)</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-success">
+                        <span id="saveState">💾 独立加密并保存设置</span>
+                    </button>
+                    <p id="saveMsg" class="save-msg hidden"></p>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- 引入 marked.js 解析 Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="/app.js"></script>
+</body>
+</html>
